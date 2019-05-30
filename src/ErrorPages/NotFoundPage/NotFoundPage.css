@@ -1,0 +1,23 @@
+.NotFoundPage {
+    position: absolute;
+    height: 100%; 
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url("/static/media/pokemon_wallpaper.22a66419.jpg");
+    text-align: center;
+}
+
+@media (max-width: 500px){
+    .NotFoundPage{
+        background-image: none;
+          background: white;
+        }
+}
+
+.pokemon_sad{
+    width: 100%;
+    margin-bottom: 25px;
+}
+

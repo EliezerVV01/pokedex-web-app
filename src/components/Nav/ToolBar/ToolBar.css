@@ -1,0 +1,38 @@
+.Toolbar{
+    height:56px;
+    width: 100%;
+    position: fixed;
+    top:0;
+    left:0;
+    background:#fff;
+    box-shadow: 1px 1px 5px rgba(0,0,0,.3);
+    border-bottom: 2px;
+    display: flex;
+    color:black;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box; 
+    z-index:90;
+}
+
+.Toolbar nav{
+    height:100%;
+}
+
+.Title{
+    color:black;
+    font-weight: bolder;
+    font-size: 25px;;
+}
+
+@media (max-width: 499px){
+    .Toolbar nav {
+        display: none;
+    }
+    .Title {
+        display: none;
+    }
+
+}
+

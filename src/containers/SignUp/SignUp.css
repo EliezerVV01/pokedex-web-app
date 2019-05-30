@@ -1,0 +1,36 @@
+.SignUp {
+    position: absolute;
+    height: 100%; 
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url("../../Assets/Images/pokemon_wallpaper.jpg");
+
+}
+
+@media (max-width: 500px){
+    .SignUp{
+          background-image: none;
+          background: white;
+        }
+}
+
+
+
+
+
+.controls{
+    margin-top: 25px;
+    margin-bottom: 15px;
+}
+
+
+.signin-btn{
+   width: 50%;
+}
+
+.signup-btn{
+    width: 50%;
+}
+

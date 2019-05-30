@@ -1,0 +1,33 @@
+.SignIn {
+    position: absolute;
+    height: 100%; 
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url("/static/media/pokemon_wallpaper.22a66419.jpg");
+
+}
+
+@media (max-width: 500px){
+    .SignIn{
+          background-image: none;
+          background: white;
+        }
+}
+
+.controls{
+    margin-top: 25px;
+    margin-bottom: 15px;
+}
+
+
+.signin-btn{
+   width: 50%;
+}
+
+.signup-btn{
+    width: 50%;
+}
+
+

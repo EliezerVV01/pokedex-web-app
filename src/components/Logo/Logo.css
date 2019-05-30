@@ -1,0 +1,12 @@
+.Logo{
+   margin: 0 auto;
+}
+
+.LogoLink{
+ cursor: pointer;
+}
+
+
+.Logo img{
+    height: 100%;
+}
