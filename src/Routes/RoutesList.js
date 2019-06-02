@@ -4,3 +4,4 @@ export const SIGNUP= '/signup';
 export const HOME= '/';
 export const PROFILE= '/profile';
 export const VALIDATE= '/validate';
+export const ADDPOKEMON= '/addpokemon';

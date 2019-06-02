@@ -11,12 +11,15 @@ class Modal extends Component {
     }
     
     render () {
+        let classes=this.props.className+" Modal";
         return (
             <Aux>
                 <Backdrop show={this.props.show} clicked={this.props.modalClosed} />
                 <div
-                    className="Modal"
+                    className={classes}
                     style={{
+                        height: this.props.height,
+                        top: this.props.top,
                         transform: this.props.show ? 'translateY(0)' : 'translateY(-100vh)',
                         opacity: this.props.show ? '1' : '0'
                     }}>

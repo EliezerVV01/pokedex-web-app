@@ -1,0 +1,70 @@
+.AddPokemon{
+    padding: 50px;
+}
+
+.CancelSelect{
+    width: 100%;
+}
+
+.PokemonCard {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width: 20%;
+    border-radius: 5px;
+    margin-bottom: 5%;
+    margin-left: 5%;
+    display: inline-block;
+  }
+
+@media screen and (max-width: 480px){
+    .PokemonCard {
+        width: 45%;
+    }
+}
+
+  
+  .PokemonCard:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    background-color: #b3b3ff;
+    cursor: pointer;
+  }
+  
+.PokemonCard  img {
+    border-radius: 5px 5px 0 0;
+  }
+  
+  .PokemonName {
+    padding: 2px 16px;
+  }
+
+.AddPokemon img {
+    width: 100%;
+    max-width: 250px;
+}
+
+.Input {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+}
+
+.FormButtons {
+    width: 48%;
+    margin-left: 1%;
+
+}
+
+.select-pokemon{
+    width: 100%;
+}
+
+.space{
+    margin-bottom: 25px;
+    margin-top: 25px;
+}
+
+@media screen and (max-width: 500px){
+  .FormButtons{
+      width: 100%;
+  }
+}

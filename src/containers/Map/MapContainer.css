@@ -1,0 +1,47 @@
+
+.leaflet-container {
+    width: 420px;
+    height: 300px;
+  }
+
+
+  /*Map for differents size celphones*/
+@media screen and (max-width: 600px){
+    .leaflet-container {
+        width: 300px;
+        height: 300px;
+      }
+    
+}
+
+
+@media screen and (max-width: 460px){
+    .leaflet-container {
+        width: 260;
+        height: 300px;
+      }
+    
+}
+
+
+@media screen and (max-width: 420px){
+    .leaflet-container {
+        width: 230px;
+        height: 300px;
+      }
+    
+}
+
+@media screen and (max-width: 380px){
+    .leaflet-container {
+        width: 185px;
+        height: 300px;
+      } 
+}
+
+@media screen and (max-width: 330px){
+    .leaflet-container {
+        width: 140px;
+        height: 300px;
+      } 
+}

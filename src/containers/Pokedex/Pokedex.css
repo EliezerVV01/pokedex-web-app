@@ -1,0 +1,23 @@
+.Pokedex{
+ padding: 20px 20px;
+}
+
+.Pokedex button {
+    width: 100%;
+    max-width:400px;
+    display: block;
+    margin: auto;
+}
+
+.PokemonHappy {
+    width: 35%;
+    display: block;
+    margin: auto;
+}
+
+
+@media (max-width: 660px){
+    .Modal{
+        background: black;
+        }
+}

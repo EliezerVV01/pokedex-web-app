@@ -13,7 +13,7 @@ const sideDrawer = (props) => {
         <Auxi>
             <Backdrop show={props.open} clicked={props.closed} />
             <div className={classes} onClick={props.closed}>
-                <Logo></Logo>
+                <Logo link={true}></Logo>
                 <nav>
                     <NavigationItems></NavigationItems>
                 </nav>

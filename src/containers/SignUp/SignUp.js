@@ -16,6 +16,7 @@ import Button from './../../components/Button/Button';
 import Modal from './../../components/UI/Modal/Modal';
 
 
+
 import { updateObject, checkValidity } from './../../utility/utility';
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -178,7 +179,7 @@ class SignUp extends Component {
          .then( response => {
           this.setState({isLoading: false});
             this.props.setValidity(false);
-            this.props.history.push({ pathname: '/validate'});
+            this.props.history.push({ pathname: links.VALIDATE});
          })
        .catch(err => {
              this.setState({error: true, isLoading: false});
@@ -214,7 +215,6 @@ class SignUp extends Component {
                 elementConfig={formElement.config.elementConfig}
                 value={formElement.config.value}
                 invalid={!formElement.config.valid}
-                shouldValidate={formElement.config.validation}
                 touched={formElement.config.touched}
                 changed={(event) => this.inputChangedHandler(event, formElement.id)} />
             ))
@@ -226,7 +226,7 @@ class SignUp extends Component {
         
         return (
             <Auxi>
-            <Modal show={this.state.error}>
+            <Modal show={this.state.error}  top="30%">
                 <h5>Alert!</h5>
            <p>{this.state.errorMessage}</p> 
             <Button className="btn btn-warning" clicked={ ()=> this.closeModal()}>It's OK!</Button>
@@ -239,10 +239,13 @@ class SignUp extends Component {
                         <div className="controls">
                            {controls}
                         </div>
-                        <NavLink to={links.LOGIN} exact> <Button  disabled={this.state.isLoading} className="btn btn-light signin-btn"> Have an account?</Button></NavLink>
                         <Button  disabled={!this.state.formIsValid||this.state.isLoading}  
                         clicked={(event) => this.addUserHandler(event)} 
-                        className="btn btn-primary signup-btn">Sign up</Button>
+                        className="btn btn-info signup-btn">Sign up</Button>
+                       <Button  disabled={this.state.isLoading} 
+                       className="btn btn-light signin-btn"
+                       clicked={()=>this.props.history.push({pathname: links.LOGIN})}> Have an account?</Button>
+                       
                     </div>
                 </Form>
             </div>

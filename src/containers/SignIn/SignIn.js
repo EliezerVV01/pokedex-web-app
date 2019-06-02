@@ -133,7 +133,7 @@ class SignIn extends Component {
 
         return (
             <Auxi>
-                <Modal show={this.state.error}>
+                <Modal show={this.state.error} top="30%">
                     <h5>Failed</h5>
                     <p>{this.state.errorMessage}</p>
                     <Button className="btn btn-warning" clicked={() => this.closeModal()}>It's OK!</Button>
@@ -146,11 +146,13 @@ class SignIn extends Component {
                             <div className="controls">
                                 {controls}
                             </div>
-                            <NavLink to={links.SIGNUP} exact> <Button disabled={this.state.isLoading} className="btn btn-light signup-btn"> Need an account?</Button></NavLink>
                             <Button disabled={!this.state.formIsValid || this.state.isLoading}
                                 clicked={(event) => this.logUserHandler(event)}
-                                className="btn btn-primary signin-btn">Sign in</Button>
-                        </div>
+                                className="btn btn-info signin-btn">Sign in</Button>
+                            <Button disabled={this.state.isLoading} 
+                            className="btn btn-light signup-btn" 
+                            clicked={()=> this.props.history.push({pathname: links.SIGNUP})}> Need an account?</Button>
+                          </div>
                     </Form>
                 </div>
             </Auxi>
