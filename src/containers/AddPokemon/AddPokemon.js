@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import { updateObject, checkValidity } from '../../utility/utility';
+
+import { debounce } from '../../utility/debounce';
+
 
 import PokemonHappy from './../../Assets/Images/pokemon_happy.png'
 import Input from '../../components/Input/Input';
@@ -20,12 +24,14 @@ import MapContainer from '../Map/MapContainer';
 import './AddPokemon.css';
 import Axios from 'axios';
 import Spinner from './../../components/UI/Spinner/Spinner';
+import MissingNo from './../../Assets/Images/missing_no.png';
 
-import { tsImportEqualsDeclaration } from '@babel/types';
 
 class AddPokemon extends Component {
 
     state = {
+        isUploadig: false,
+        pokemonInSearch: '',
         loading: false,
         selectingPokemon: false,
         pokemonsForSelect: [],
@@ -33,6 +39,7 @@ class AddPokemon extends Component {
         errorMessage: 'Something went wrong',
         success: false,
         formIsValid: false,
+        pokemonSelected: null,
         pokemon: {
             captured: {
                 value: '',
@@ -73,16 +80,43 @@ class AddPokemon extends Component {
     }
 
 
-    /*Cancel or OK*/
+    /*Cancel or Post data*/
 
-    goToHome = () => {
+    cancelHandler = (event) => {
+        event.preventDefault();
         this.props.history.push({ pathname: links.HOME });
     }
 
 
     addPokemon = (e) => {
         e.preventDefault();
-        console.log("working");
+        this.setState({ isUploadig: false });
+        const formData = {
+            pokemon: {}
+        };
+        for (let element in this.state.pokemon) {
+            formData.pokemon[element] = this.state.pokemon[element].value;
+        }
+        const today = new Date();
+        const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        formData.pokemon['date'] = date;
+
+
+        Axios.post('/pokemons/add/', formData, { headers: { 'Authorization': this.props.token } })
+            .then(response => {
+                this.setState({ isUploadig: false });
+                this.setState({ success: true });
+            }).catch(err => {
+                this.setState({ isUploadig: false });
+                if (!err.response) {
+                    this.setState({ errorMessage: 'Something went wrong!' })
+                    this.setState({ error: true });
+                } else if (err.response.status === 401) {
+                    this.setState({ errorMessage: err.response.data.errorMessage })
+                    this.setState({ error: true });
+                };
+            })
+
     }
 
 
@@ -129,9 +163,9 @@ class AddPokemon extends Component {
     }
 
 
-    selectedPokemonHandler = (id) => {
+    selectedPokemonHandler = (id, name) => {
 
-
+        this.setState({ pokemonSelected: name });
         const updatedFormElement = updateObject(this.state.pokemon['pokemonId'], {
             value: id,
             valid: checkValidity(id, this.state.pokemon['pokemonId'].validation),
@@ -150,18 +184,28 @@ class AddPokemon extends Component {
 
     //end of functions for getting the data from the form
 
+
     pokemonSelectionStart = (event) => {
         event.preventDefault();
         this.setState({ selectingPokemon: true, loading: true });
-        Axios.get("http://localhost:8080/api/pokemons/")
+        Axios.get(`http://localhost:8080/api/pokemons/?name=${this.state.pokemonInSearch}`)
             .then((response) => {
                 const AllPokemons = response.data;
                 this.setState({ pokemonsForSelect: AllPokemons, loading: false });
             }).catch((err) => {
                 console.log(err);
-                this.setState({ error: true, loading: false });
+                this.setState({ error: true, loading: false, selectingPokemon: false });
             })
 
+    }
+
+
+    searchDebounced = debounce((e) => this.pokemonSelectionStart(e), 200);
+
+    onSearch(event) {
+        event.persist();
+        this.searchDebounced(event);
+        this.setState({ pokemonInSearch: event.target.value });
     }
 
 
@@ -177,11 +221,11 @@ class AddPokemon extends Component {
                 pokemon => {
                     return (
                         <div className="PokemonCard" key={pokemon.id + 1}
-                            onClick={() => this.selectedPokemonHandler(pokemon.id)}>
+                            onClick={() => this.selectedPokemonHandler(pokemon.id, pokemon.name)}>
                             <img alt="pokemon"
                                 src={pokemon.picture}
-                                key={pokemon.id}></img>
-                            <div className="PokemonName" key={pokemon.id + 2}>{pokemon.name}</div>
+                                key={pokemon.name + 1}></img>
+                            <div className="PokemonName" key={pokemon.name}>{pokemon.name}</div>
                         </div>
                     )
 
@@ -207,21 +251,27 @@ class AddPokemon extends Component {
         );
 
         let SelectPokemonModal = (
-            <Modal top="0%" height="100%" show={this.state.selectingPokemon} id="PokemonsModal" modalClosed={this.closeModal}>
-                <h5>Choose your pokemon</h5>
-                {this.state.loading ? spinner : pokemons}
-                <div className="row">
-                    <div className="col-sm-4"></div>
-                    <div className="col-sm-4">
-                        <Button className="btn btn-danger CancelSelect" clicked={() => this.closeModal()}>
-                            Cancel </Button>
-                    </div>
-                    <div className="col-sm-4"></div>
+            <Modal top="0%" show={this.state.selectingPokemon} id="PokemonsModal" modalClosed={this.closeModal}>
+                <h5 style={{ display: "inline" }}>Choose your pokemon</h5><Button className="btn btn-danger CancelSelect" clicked={() => this.closeModal()}>
+                    X
+                </Button>
+                <Input elementType="input"
+                    value={this.state.pokemonInSearch}
+                    changed={(e) => this.onSearch(e)}></Input>
+                <p style={{ color: 'rgb(103, 103, 103)', fontWeight: 600, fontSize: 18, textAlign: "center" }}>{this.state.pokemonSelected ?
+                    `You had selected: ${this.state.pokemonSelected}` :
+                    null}</p>
+                <br></br>
+                <div className="PokemonsContainer">
+                    {(this.state.pokemonsForSelect.length < 1) && !this.state.loading ?
+                        <div style={{ textAlign: "center" }}> <p className="PokemonNotFound">
+                            Pokemon not found!</p>
+                            <img src={MissingNo} alt="Missing_No"></img></div>
+                        : pokemons}
+                    {this.state.loading ? spinner : pokemons}
                 </div>
-
             </Modal>
         );
-
 
 
         return (<Layout>
@@ -229,7 +279,6 @@ class AddPokemon extends Component {
                 {this.state.error ? modalError : null}
                 {this.state.success ? modalSuccess : null}
                 {this.state.selectingPokemon ? SelectPokemonModal : null}
-
 
                 <Form>
                     <h4 style={{ textAlign: "center" }}>Add a pokemon to your pokedex</h4>
@@ -245,9 +294,16 @@ class AddPokemon extends Component {
                         touched={this.state.pokemon.captured.touched}
                         changed={(event) => this.selectChangedHandler(event)}></Input>
 
-                    <Button className="btn btn-secondary select-pokemon space" clicked={(event) => this.pokemonSelectionStart(event)}>
+
+                    <Button className={!this.state.pokemon['pokemonId'].value ?
+                        'btn btn-light select-pokemon space' :
+                        'btn btn-dark select-pokemon space'} clicked={(event) => this.pokemonSelectionStart(event)}>
                         <FontAwesomeIcon
-                            icon="paw" /> {!this.state.pokemon['pokemonId'].value ? 'Select the pokemon you found' : 'You have selected a pokemon!'}</Button>
+                            icon="paw" />
+                        {!this.state.pokemon['pokemonId'].value ?
+                            'Select the pokemon you found' :
+                            'You have selected a pokemon!'}
+                    </Button>
                     <strong>Pick where you found it (Drag the pointer)</strong>
                     <br></br>
 
@@ -261,12 +317,20 @@ class AddPokemon extends Component {
                         <FontAwesomeIcon
                             icon="plus-circle" /> Add pokemon</Button>
 
-                    <Button className="btn btn-danger FormButtons" clicked={this.goToHome}> <FontAwesomeIcon
+                    <Button className="btn btn-danger FormButtons" clicked={(e)=>this.cancelHandler(e)}> <FontAwesomeIcon
                         icon="window-close" /> Cancel</Button>
                 </Form>
+
+
             </div>
         </Layout>);
     }
 }
 
-export default AddPokemon;
+const mapStatesToProps = state => {
+    return {
+        token: state.token,
+    }
+};
+
+export default connect(null, mapStatesToProps)(AddPokemon);

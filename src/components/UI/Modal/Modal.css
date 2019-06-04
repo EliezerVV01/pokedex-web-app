@@ -1,6 +1,6 @@
 .Modal {
     position: fixed;
-    z-index: 500000;
+    z-index: 5000;
     background-color: white;
     width: 80%;
    border: 1px solid #ccc;
@@ -10,10 +10,9 @@
     left: 10%;
     box-sizing: border-box;
     transition: all 0.3s ease-out;
-    overflow-y: scroll;
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 500px) {
     .Modal{
         width: 100%;
         left: 0%;

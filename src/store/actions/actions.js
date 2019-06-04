@@ -24,3 +24,4 @@ export const setToken = (_token) =>{
         val: _token,
     }
 }
+

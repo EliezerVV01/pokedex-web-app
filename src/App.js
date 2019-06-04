@@ -13,7 +13,23 @@ import ValidateEmail from './containers/ValidateEmail/ValidateEmail'
 import NotFoundPage from './ErrorPages/NotFoundPage/NotFoundPage'
 import AuthenticatedRoute from './Routes/AuthenticatedRoute/AuthenticatedRoute';
 import UnauthenticatedRoute from './Routes/UnanthenticatedRoute/UnauthenticatedRoute';
+import Axios from 'axios';
 
+
+
+Axios.defaults.baseURL = 'http://localhost:8080/api/';
+
+
+Axios.interceptors.request.use(request => {
+    return request;
+}, error => {
+    console.log(error);
+    return Promise.reject(error);
+});
+
+/*
+Axios.defaults.headers.common['Authorization'] = 'sadasd';
+*/
 
 
 library.add(faUser, faSignOutAlt, faPlusCircle, 

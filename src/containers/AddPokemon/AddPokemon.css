@@ -3,7 +3,23 @@
 }
 
 .CancelSelect{
-    width: 100%;
+     float: right;
+     margin-bottom: 5px;
+
+}
+
+.PokemonsContainer{
+  overflow-y: scroll;
+  height: 750px;
+  padding: 20px;
+
+}
+
+.PokemonNotFound {
+  color: #a9a9a9;
+  font-weight: 900;
+  font-size: 25px;
+
 }
 
 .PokemonCard {
@@ -16,7 +32,14 @@
     display: inline-block;
   }
 
-@media screen and (max-width: 480px){
+  @media screen and (max-width: 780px){
+    .PokemonCard {
+        width: 25%;
+    }
+}
+
+
+@media screen and (max-width: 580px){
     .PokemonCard {
         width: 45%;
     }

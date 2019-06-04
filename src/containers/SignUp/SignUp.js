@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { NavLink } from 'react-router-dom';
-
 
 import * as actions from './../../store/actions/actions';
 
@@ -193,6 +191,12 @@ class SignUp extends Component {
          });
     }
 
+    cancelHandler = (event) => {
+       event.preventDefault();
+       this.props.history.push({pathname: links.LOGIN});
+
+    }
+
     closeModal = () =>{
         this.setState({error: false, errorMessage: ''});
     }
@@ -244,7 +248,7 @@ class SignUp extends Component {
                         className="btn btn-info signup-btn">Sign up</Button>
                        <Button  disabled={this.state.isLoading} 
                        className="btn btn-light signin-btn"
-                       clicked={()=>this.props.history.push({pathname: links.LOGIN})}> Have an account?</Button>
+                       clicked={(e)=>this.cancelHandler(e)}> Have an account?</Button>
                        
                     </div>
                 </Form>

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './SignIn.css';
 import axios from 'axios';
-import { NavLink } from 'react-router-dom';
 import * as actions from './../../store/actions/actions';
 
 import Logo from './../../components/Logo/Logo';
@@ -20,6 +19,9 @@ import Auxi from './../../hoc/Auxi';
 
 
 class SignIn extends Component {
+
+    _isMounted = false;
+
     state = {
         error: false,
         errorMessage: '',
@@ -55,6 +57,14 @@ class SignIn extends Component {
         },
     }
 
+    componentDidMount(){
+        this._isMounted = true;
+    }
+
+    componentWillUnmount(){
+        this._isMounted = false;
+    }
+
     inputChangedHandler = (event, inputIdentifier) => {
         const updatedFormElement = updateObject(this.state.userForm[inputIdentifier], {
             value: event.target.value,
@@ -85,7 +95,9 @@ class SignIn extends Component {
             .then(response => {
                 this.props.setAuth(true);
                 this.props.setToken(response.data.token);
-                this.setState({ isLoading: false });
+                if(this._isMounted){
+                    this.setState({ isLoading: false });
+                }
                 this.props.history.push({ pathname: '/' });
             })
             .catch(err => {
@@ -98,6 +110,12 @@ class SignIn extends Component {
                     this.setState({ errorMessage: "¡There's something bad in the request!" })
                 }
             });
+    }
+
+    cancelHandler = (event) => {
+        event.preventDefault();
+        this.props.history.push({ pathname: links.SIGNUP });
+
     }
 
     closeModal = () => {
@@ -149,10 +167,10 @@ class SignIn extends Component {
                             <Button disabled={!this.state.formIsValid || this.state.isLoading}
                                 clicked={(event) => this.logUserHandler(event)}
                                 className="btn btn-info signin-btn">Sign in</Button>
-                            <Button disabled={this.state.isLoading} 
-                            className="btn btn-light signup-btn" 
-                            clicked={()=> this.props.history.push({pathname: links.SIGNUP})}> Need an account?</Button>
-                          </div>
+                            <Button disabled={this.state.isLoading}
+                                className="btn btn-light signup-btn"
+                                clicked={(e) => this.cancelHandler(e)}> Need an account?</Button>
+                        </div>
                     </Form>
                 </div>
             </Auxi>

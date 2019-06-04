@@ -1,10 +1,9 @@
-import * as actions from '../actions/actions';
 import {updateObject} from '../../utility/utility';
 
 const initialState = {
     validated : null,
     auth: false,
-    token: '',
+    token: null,
 };
 
 const reducer = ( state = initialState, action ) => {

@@ -4,7 +4,6 @@ import './Pokedex.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import Layout from './../../hoc/Layout/Layout'
-import Modal from './../../components/UI/Modal/Modal';
 
 import Button from './../../components/Button/Button';
 

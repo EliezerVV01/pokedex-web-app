@@ -6,18 +6,8 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react'
-import Axios from 'axios';
 import * as redux from './store/configurePersistentStore';
 
-Axios.defaults.baseURL = 'http://localhost:8080/api/';
-
-
-Axios.interceptors.request.use(request => {
-    return request;
-}, error => {
-    console.log(error);
-    return Promise.reject(error);
-});
 
 
 

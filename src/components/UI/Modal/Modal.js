@@ -18,7 +18,7 @@ class Modal extends Component {
                 <div
                     className={classes}
                     style={{
-                        height: this.props.height,
+                        zIndex: this.props.zIndex,
                         top: this.props.top,
                         transform: this.props.show ? 'translateY(0)' : 'translateY(-100vh)',
                         opacity: this.props.show ? '1' : '0'
