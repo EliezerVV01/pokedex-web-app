@@ -10,9 +10,30 @@
 
 .PokemonsContainer{
   overflow-y: scroll;
-  height: 750px;
+  height: 365px;
   padding: 20px;
 
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+ ::-webkit-scrollbar-thumb {
+  background:  grey;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.PokemonsContainer::-webkit-scrollbar-thumb:hover {
+  background:  rgb(66, 66, 66);
 }
 
 .PokemonNotFound {
@@ -25,12 +46,20 @@
 .PokemonCard {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
-    width: 20%;
+    width: 15%;
     border-radius: 5px;
     margin-bottom: 5%;
     margin-left: 5%;
     display: inline-block;
+    text-align: center;
   }
+
+  @media screen and (max-width: 1000px){
+    .PokemonCard {
+        width: 20%;
+    }
+  }
+
 
   @media screen and (max-width: 780px){
     .PokemonCard {
@@ -38,11 +67,26 @@
     }
 }
 
+@media screen and (max-width: 515px){
+  .PokemonCard {
+      width: 45%;
+  }
+}
 
-@media screen and (max-width: 580px){
-    .PokemonCard {
-        width: 45%;
-    }
+
+
+.PokemonSelected {
+  background-color: #b3b3ff75;
+  transition: 0.3s;
+  width: 50%;
+  max-width: 100px;
+  border-radius: 5px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2%;
+  text-align: center;
+
 }
 
   
@@ -62,7 +106,7 @@
 
 .AddPokemon img {
     width: 100%;
-    max-width: 250px;
+    max-width: 150px;
 }
 
 .Input {

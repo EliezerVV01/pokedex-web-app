@@ -42,7 +42,8 @@ class SignUp extends Component {
                 valid: false,
                 touched: false,
                 validation: {
-                    required: true
+                    required: true,
+                    maxLength: 20,
                 }
             },
             password: {
@@ -55,7 +56,8 @@ class SignUp extends Component {
                 valid: false,
                 touched: false,
                 validation: {
-                    required: true
+                    required: true,
+                    maxLength: 50,
                 }
             },
             firstName: {
@@ -68,7 +70,8 @@ class SignUp extends Component {
                 valid: false,
                 touched: false,
                 validation: {
-                    required: true
+                    required: true,
+                    maxLength: 25,
                 }
             },
             lastName: {
@@ -81,7 +84,8 @@ class SignUp extends Component {
                 valid: false,
                 touched: false,
                 validation: {
-                    required: true
+                    required: true,
+                    maxLength: 50,
                 }
             },
             email: {
@@ -95,7 +99,8 @@ class SignUp extends Component {
                 touched: false,
                 validation: {
                     required: true,
-                    isEmail: true
+                    isEmail: true,
+                    maxLength: 50,
                 }
             },
             gender: {
@@ -125,6 +130,7 @@ class SignUp extends Component {
                 touched: false,
                 validation: {
                     required: true,
+                    maxLength: 100,
                 }
             },
             birthDate: {

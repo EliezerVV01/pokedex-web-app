@@ -27,49 +27,57 @@ import Spinner from './../../components/UI/Spinner/Spinner';
 import MissingNo from './../../Assets/Images/missing_no.png';
 
 
+const initialState = {
+    isUploadig: false,
+    pokemonInSearch: '',
+    loading: false,
+    selectingPokemon: false,
+    pokemonsForSelect: [],
+    error: false,
+    errorMessage: 'Something went wrong',
+    success: false,
+    formIsValid: false,
+    pokemonSelected: {
+        image: null,
+        name: null,
+    },
+    pokemon: {
+        captured: {
+            value: '',
+            valid: false,
+            touched: false,
+            validation: {
+                required: true,
+            }
+        },
+        pokemonId: {
+            value: null,
+            valid: false,
+            touched: false,
+            validation: {
+                isNumeric: true,
+            }
+        },
+        locationLongitude: {
+            value: 0.5,
+            valid: true,
+        },
+        locationLatitude: {
+            value: 0.5,
+            valid: true,
+        }
+
+
+    },
+}
+
 class AddPokemon extends Component {
 
-    state = {
-        isUploadig: false,
-        pokemonInSearch: '',
-        loading: false,
-        selectingPokemon: false,
-        pokemonsForSelect: [],
-        error: false,
-        errorMessage: 'Something went wrong',
-        success: false,
-        formIsValid: false,
-        pokemonSelected: null,
-        pokemon: {
-            captured: {
-                value: '',
-                valid: false,
-                touched: false,
-                validation: {
-                    required: true,
-                }
-            },
-            pokemonId: {
-                value: null,
-                valid: false,
-                touched: false,
-                validation: {
-                    isNumeric: true,
-                }
-            },
-            locationLongitude: {
-                value: 0.5,
-                valid: true,
-            },
-            locationLatitude: {
-                value: 0.5,
-                valid: true,
-            }
+    state = initialState;
 
-
-        },
+    reset() {
+        this.setState(initialState);
     }
-
 
     /*Functions to handle the inputs*/
 
@@ -102,20 +110,22 @@ class AddPokemon extends Component {
         formData.pokemon['date'] = date;
 
 
+
         Axios.post('/pokemons/add/', formData, { headers: { 'Authorization': this.props.token } })
             .then(response => {
                 this.setState({ isUploadig: false });
                 this.setState({ success: true });
             }).catch(err => {
-                this.setState({ isUploadig: false });
-                if (!err.response) {
-                    this.setState({ errorMessage: 'Something went wrong!' })
-                    this.setState({ error: true });
-                } else if (err.response.status === 401) {
+                this.setState({ error: true, isUploading: false });
+                if (err.response) {
                     this.setState({ errorMessage: err.response.data.errorMessage })
-                    this.setState({ error: true });
-                };
+                } else if (err.request) {
+                    this.setState({ errorMessage: "¡Something went wrong! Try later" })
+                } else {
+                    this.setState({ errorMessage: "¡There's something bad in the request!" })
+                }
             })
+        this.reset();
 
     }
 
@@ -163,12 +173,15 @@ class AddPokemon extends Component {
     }
 
 
-    selectedPokemonHandler = (id, name) => {
-
-        this.setState({ pokemonSelected: name });
+    selectedPokemonHandler = (pokemon) => {
+        const updatedSelected = updateObject(this.state.pokemonSelected, {
+            image: pokemon.picture,
+            name: pokemon.name,
+        });
+        this.setState({ pokemonSelected: updatedSelected });
         const updatedFormElement = updateObject(this.state.pokemon['pokemonId'], {
-            value: id,
-            valid: checkValidity(id, this.state.pokemon['pokemonId'].validation),
+            value: pokemon.id,
+            valid: checkValidity(pokemon.id, this.state.pokemon['pokemonId'].validation),
             touched: true,
         });
 
@@ -179,7 +192,7 @@ class AddPokemon extends Component {
         for (let inputIdentifier in updatedForm) {
             formIsValid = updatedForm[inputIdentifier].valid && formIsValid;
         }
-        this.setState({ pokemon: updatedForm, formIsValid: formIsValid, selectingPokemon: false });
+        this.setState({ pokemon: updatedForm, formIsValid: formIsValid });
     }
 
     //end of functions for getting the data from the form
@@ -200,7 +213,7 @@ class AddPokemon extends Component {
     }
 
 
-    searchDebounced = debounce((e) => this.pokemonSelectionStart(e), 200);
+    searchDebounced = debounce((e) => this.pokemonSelectionStart(e), 250);
 
     onSearch(event) {
         event.persist();
@@ -210,18 +223,18 @@ class AddPokemon extends Component {
 
 
     render() {
-        let spinner = (
-            <Spinner></Spinner>
-        )
         let pokemons = (<div>
 
         </div>);
         if (!this.state.error && !this.loading) {
+
             pokemons = this.state.pokemonsForSelect.map(
                 pokemon => {
+
                     return (
                         <div className="PokemonCard" key={pokemon.id + 1}
-                            onClick={() => this.selectedPokemonHandler(pokemon.id, pokemon.name)}>
+                            onClick={() => this.selectedPokemonHandler(pokemon)}
+                            onDoubleClick={() => { this.selectedPokemonHandler(pokemon); this.setState({ selectingPokemon: false }) }}>
                             <img alt="pokemon"
                                 src={pokemon.picture}
                                 key={pokemon.name + 1}></img>
@@ -250,28 +263,46 @@ class AddPokemon extends Component {
             </Modal>
         );
 
+
+
+
         let SelectPokemonModal = (
             <Modal top="0%" show={this.state.selectingPokemon} id="PokemonsModal" modalClosed={this.closeModal}>
-                <h5 style={{ display: "inline" }}>Choose your pokemon</h5><Button className="btn btn-danger CancelSelect" clicked={() => this.closeModal()}>
-                    X
+                <h5 style={{ display: "inline" }}>Choose your pokemon</h5><Button className="btn btn-secondary CancelSelect" clicked={() => this.closeModal()}>
+                    Done
                 </Button>
                 <Input elementType="input"
                     value={this.state.pokemonInSearch}
                     changed={(e) => this.onSearch(e)}></Input>
-                <p style={{ color: 'rgb(103, 103, 103)', fontWeight: 600, fontSize: 18, textAlign: "center" }}>{this.state.pokemonSelected ?
-                    `You had selected: ${this.state.pokemonSelected}` :
-                    null}</p>
+                <div className="PokemonSelected">
+                    <img alt="pokemon"
+                        src={this.state.pokemonSelected['image'] ? this.state.pokemonSelected['image'] :
+                            MissingNo}>
+                    </img>
+                    <div className="PokemonName" >{this.state.pokemonSelected['name']}</div>
+                </div>
+
+                <p style={{ color: 'rgb(103, 103, 103)', marginBottom: 0, fontWeight: 600, fontSize: 18, textAlign: "center" }}>{this.state.pokemonSelected['name'] ?
+                    `You have selected: ${this.state.pokemonSelected['name']}` :
+                    `You haven't selected a pokemon yet`}</p>
                 <br></br>
                 <div className="PokemonsContainer">
-                    {(this.state.pokemonsForSelect.length < 1) && !this.state.loading ?
+                {(this.state.loading)?
+                   <Spinner></Spinner> : pokemons
+                   }
+                   
+                    {(!this.state.loading && this.state.pokemonsForSelect.length > 0) ?
+                        null :
                         <div style={{ textAlign: "center" }}> <p className="PokemonNotFound">
                             Pokemon not found!</p>
                             <img src={MissingNo} alt="Missing_No"></img></div>
-                        : pokemons}
-                    {this.state.loading ? spinner : pokemons}
+                    }
+                    
                 </div>
             </Modal>
         );
+
+
 
 
         return (<Layout>
@@ -282,11 +313,11 @@ class AddPokemon extends Component {
 
                 <Form>
                     <h4 style={{ textAlign: "center" }}>Add a pokemon to your pokedex</h4>
-                    <img src={PokemonHappy} alt="pokemon_happy"
+                    <img src={!this.state.pokemonSelected['image'] ? PokemonHappy : this.state.pokemonSelected['image']} alt="pokemon_happy"
                         className="PokemonHappy">
                     </img>
                     <Input elementType='select' elementConfig={{
-                        options: [{ value: '', displayValue: 'Did you captured it?' },
+                        options: [{ value: '', displayValue: 'Did you capture it?' },
                         { value: true, displayValue: 'Yes' },
                         { value: false, displayValue: 'No' }]
                     }}
@@ -301,8 +332,8 @@ class AddPokemon extends Component {
                         <FontAwesomeIcon
                             icon="paw" />
                         {!this.state.pokemon['pokemonId'].value ?
-                            'Select the pokemon you found' :
-                            'You have selected a pokemon!'}
+                            ' Select the pokemon you found' :
+                            ` Well done! You have selected ${this.state.pokemonSelected['name']}`}
                     </Button>
                     <strong>Pick where you found it (Drag the pointer)</strong>
                     <br></br>
@@ -317,7 +348,7 @@ class AddPokemon extends Component {
                         <FontAwesomeIcon
                             icon="plus-circle" /> Add pokemon</Button>
 
-                    <Button className="btn btn-danger FormButtons" clicked={(e)=>this.cancelHandler(e)}> <FontAwesomeIcon
+                    <Button className="btn btn-danger FormButtons" clicked={(e) => this.cancelHandler(e)}> <FontAwesomeIcon
                         icon="window-close" /> Cancel</Button>
                 </Form>
 
@@ -333,4 +364,4 @@ const mapStatesToProps = state => {
     }
 };
 
-export default connect(null, mapStatesToProps)(AddPokemon);
+export default connect(mapStatesToProps)(AddPokemon);
