@@ -72,7 +72,7 @@ class Pokedex extends Component {
                     pokemon => {
     
                         return (
-                            <PokemonCard 
+                            <PokemonCard key={pokemon.id}
                             onClick={() => this.selectPokemon(pokemon)}
                             src={pokemon.picture}
                             keyCard={pokemon.id + 1}

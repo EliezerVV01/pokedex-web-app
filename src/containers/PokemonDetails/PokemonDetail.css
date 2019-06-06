@@ -5,6 +5,10 @@
     
 }
 
+.CenterModal{
+    text-align: center;
+}
+
 .Details{
     width: 100%;
     max-width: 450px;

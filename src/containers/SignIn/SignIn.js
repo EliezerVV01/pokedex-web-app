@@ -172,6 +172,9 @@ class SignIn extends Component {
                             <Button disabled={this.state.isLoading}
                                 className="btn btn-light signup-btn"
                                 clicked={(e) => this.cancelHandler(e)}> Need an account?</Button>
+                               <Button disabled={this.state.isLoading}
+                                className="btn btn-link resetPass"
+                                clicked={(e) => this.props.history.push({pathname: links.RESETPASSWORD})}> Forgot your password?</Button> 
                         </div>
                     </Form>
                 </div>

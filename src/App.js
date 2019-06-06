@@ -12,6 +12,7 @@ import Logout from './components/Logout/Logout'
 import PokemonDetails from './containers/PokemonDetails/PokemonDetails';
 import ValidateEmail from './containers/ValidateEmail/ValidateEmail'
 import NotFoundPage from './ErrorPages/NotFoundPage/NotFoundPage'
+import ResetPassword from './containers/ResetPassword/ResetPassword';
 import AuthenticatedRoute from './Routes/AuthenticatedRoute/AuthenticatedRoute';
 import UnauthenticatedRoute from './Routes/UnanthenticatedRoute/UnauthenticatedRoute';
 import Axios from 'axios';
@@ -45,7 +46,8 @@ class App extends Component {
 
      
           <Switch> 
-            <AuthenticatedRoute path="/pokedex" exact component={Pokedex} />
+            <AuthenticatedRoute path="/" exact component={Pokedex} />
+            <UnauthenticatedRoute path="/resetPassword" exact component={ResetPassword} /> ResetPassword
             <UnauthenticatedRoute path="/signin" exact component={SignIn} />
             <UnauthenticatedRoute path="/validate" exact component={ValidateEmail} />
             <UnauthenticatedRoute path="/validate/:token" exact component={ValidateEmail} />
