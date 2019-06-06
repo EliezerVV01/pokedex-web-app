@@ -1,26 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import { updateObject, checkValidity } from '../../utility/utility';
-
 import { debounce } from '../../utility/debounce';
-
-
 import PokemonHappy from './../../Assets/Images/pokemon_happy.png'
 import Input from '../../components/Input/Input';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
 import Layout from '../../hoc/Layout/Layout'
 import Form from '../../components/Form/Form';
-
 import Modal from '../../components/UI/Modal/Modal';
-
+import PokemonCard from './../../components/PokemonCard/PokemonCard';
 import * as links from '../../Routes/RoutesList';
-
 import Button from '../../components/Button/Button';
 import MapContainer from '../Map/MapContainer';
-
 import './AddPokemon.css';
 import Axios from 'axios';
 import Spinner from './../../components/UI/Spinner/Spinner';
@@ -73,10 +64,22 @@ const initialState = {
 
 class AddPokemon extends Component {
 
+    
+    _isMounted = false;
+
     state = initialState;
 
     reset() {
         this.setState(initialState);
+    }
+    
+
+    componentDidMount(){
+        this._isMounted = true;
+    }
+
+    componentWillUnmount(){
+        this._isMounted = false;
     }
 
     /*Functions to handle the inputs*/
@@ -111,25 +114,27 @@ class AddPokemon extends Component {
 
 
 
-        Axios.post('/pokemons/add/', formData, { headers: { 'Authorization': this.props.token } })
+        Axios.post('/pokemons/', formData, { headers: { 'Authorization': this.props.token } })
             .then(response => {
                 this.setState({ isUploadig: false });
                 this.setState({ success: true });
             }).catch(err => {
-                this.setState({ error: true, isUploading: false });
-                if (err.response) {
+                if(err.response.status===401){
+                    this.props.history.push({pathname: links.LOGOUT});
+                }
+                if(this._isMounted){
+                    this.setState({ error: true, isUploading: false });
+                if ( err.response.data.errorMessage) {
                     this.setState({ errorMessage: err.response.data.errorMessage })
                 } else if (err.request) {
                     this.setState({ errorMessage: "¡Something went wrong! Try later" })
                 } else {
                     this.setState({ errorMessage: "¡There's something bad in the request!" })
                 }
+            }
             })
         this.reset();
-
     }
-
-
 
     //Functions for getting the data from the form
 
@@ -232,14 +237,14 @@ class AddPokemon extends Component {
                 pokemon => {
 
                     return (
-                        <div className="PokemonCard" key={pokemon.id + 1}
-                            onClick={() => this.selectedPokemonHandler(pokemon)}
-                            onDoubleClick={() => { this.selectedPokemonHandler(pokemon); this.setState({ selectingPokemon: false }) }}>
-                            <img alt="pokemon"
-                                src={pokemon.picture}
-                                key={pokemon.name + 1}></img>
-                            <div className="PokemonName" key={pokemon.name}>{pokemon.name}</div>
-                        </div>
+                       <PokemonCard 
+                       onClick={() => this.selectedPokemonHandler(pokemon)}
+                       onDoubleClick={() => { this.selectedPokemonHandler(pokemon); this.setState({ selectingPokemon: false }) }}
+                       src={pokemon.picture}
+                       keyCard={pokemon.id + 1}
+                       keyImg={pokemon.name + 1}
+                       keyName={pokemon.name}
+                       name={pokemon.name}> </PokemonCard>
                     )
 
                 });
@@ -287,17 +292,17 @@ class AddPokemon extends Component {
                     `You haven't selected a pokemon yet`}</p>
                 <br></br>
                 <div className="PokemonsContainer">
-                {(this.state.loading)?
-                   <Spinner></Spinner> : pokemons
-                   }
-                   
-                    {(!this.state.loading && this.state.pokemonsForSelect.length > 0) ?
-                        null :
+                    {(this.state.loading) ?
+                        <Spinner></Spinner> : pokemons
+                    }
+
+                    {(!this.state.loading && this.state.pokemonsForSelect.length < 1) ?
                         <div style={{ textAlign: "center" }}> <p className="PokemonNotFound">
                             Pokemon not found!</p>
-                            <img src={MissingNo} alt="Missing_No"></img></div>
+                            <img src={MissingNo} alt="Missing_No"></img>
+                        </div> : null
                     }
-                    
+
                 </div>
             </Modal>
         );
@@ -316,11 +321,13 @@ class AddPokemon extends Component {
                     <img src={!this.state.pokemonSelected['image'] ? PokemonHappy : this.state.pokemonSelected['image']} alt="pokemon_happy"
                         className="PokemonHappy">
                     </img>
-                    <Input elementType='select' elementConfig={{
-                        options: [{ value: '', displayValue: 'Did you capture it?' },
-                        { value: true, displayValue: 'Yes' },
-                        { value: false, displayValue: 'No' }]
-                    }}
+                    <Input elementType='select'
+                        value={this.state.pokemon['captured'].value}
+                        elementConfig={{
+                            options: [{ value: '', displayValue: 'Did you capture it?' },
+                            { value: true, displayValue: 'Yes' },
+                            { value: false, displayValue: 'No' }]
+                        }}
                         invalid={!this.state.pokemon.captured.valid}
                         touched={this.state.pokemon.captured.touched}
                         changed={(event) => this.selectChangedHandler(event)}></Input>
@@ -338,9 +345,8 @@ class AddPokemon extends Component {
                     <strong>Pick where you found it (Drag the pointer)</strong>
                     <br></br>
 
-                    <div className="Map">
-                        <MapContainer setPosition={(lon, lat) => this.setPosition(lon, lat)}></MapContainer>
-                    </div>
+                        <MapContainer draggable={true} setPosition={(lon, lat) => this.setPosition(lon, lat)}></MapContainer>
+                    
                     <br></br>
                     <Button className="btn btn-info FormButtons"
                         disabled={!this.state.formIsValid}

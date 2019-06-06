@@ -6,6 +6,8 @@ import Form from './../../components/Form/Form'
 import './NotFoundPage.css';
 import PokemonSad from '../../Assets/Images/pokemon_sad.png';
 
+import * as links from './../../Routes/RoutesList';
+
 class NotFoundPage extends Component {
     render() {
         return (
@@ -15,7 +17,7 @@ class NotFoundPage extends Component {
                         src={PokemonSad}
                         className="pokemon_sad" />
                     <h3>Error 404: Not Found Page</h3>
-                    <NavLink to="/" exact><Button className="btn btn-primary">Go to Home Page!</Button> </NavLink>
+                    <NavLink to={links.HOME} exact><Button className="btn btn-primary">Go to Home Page!</Button> </NavLink>
                 </Form>
             </div>
         )

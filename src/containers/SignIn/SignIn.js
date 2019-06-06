@@ -93,12 +93,12 @@ class SignIn extends Component {
         }
         axios.post('/users/login/', formData)
             .then(response => {
-                this.props.setAuth(true);
                 this.props.setToken(response.data.token);
-                if(this._isMounted){
+                this.props.setAuth(true);
+               if(this._isMounted){
                     this.setState({ isLoading: false });
                 }
-                this.props.history.push({ pathname: '/' });
+                this.props.history.push({ pathname: links.HOME });
             })
             .catch(err => {
                 this.setState({ error: true, isLoading: false });
@@ -111,6 +111,8 @@ class SignIn extends Component {
                 }
             });
     }
+
+   
 
     cancelHandler = (event) => {
         event.preventDefault();
@@ -179,6 +181,12 @@ class SignIn extends Component {
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        token: state.token,
+    }
+};
+
 const mapDispatchToProps = dispatch => {
     return {
         setToken: (token) => dispatch(actions.setToken(token)),
@@ -186,4 +194,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(null, mapDispatchToProps)(SignIn);
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn);

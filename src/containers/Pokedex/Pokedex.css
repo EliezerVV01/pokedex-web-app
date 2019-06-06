@@ -1,6 +1,25 @@
 .Pokedex{
  padding: 20px 20px;
+ height: 100%;
 }
+
+.Pokemons-Container{
+    border-radius: 10px;
+    width: 100%;
+    max-width: 1080px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    background: white;
+    padding: 40px;
+    min-height: 465px;
+}
+
+.NoPokemonsAdded{
+    width: 100%;
+    max-width: 370px;
+}
+
 
 .Pokedex button {
     width: 100%;

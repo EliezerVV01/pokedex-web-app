@@ -1,11 +1,12 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import DesktopLogoImage from '../../Assets/Images/pokedex_desktop_logo.png';
+import * as links from '../../Routes/RoutesList';
 import './Logo.css';
 
 
 const logo = (props) => {
-    let logo=( <NavLink to="/" exact>
+    let logo=( <NavLink to={links.HOME} exact>
     <img alt="logo"
         src={DesktopLogoImage}
         className="LogoLink" />

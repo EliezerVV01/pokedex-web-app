@@ -71,7 +71,7 @@ class MapContainer extends Component {
 
             <Map children
                 onZoom={this.OnZoomHandler}
-                center={position}
+                center={this.props.center?this.props.center:position}
                 length={4}
                 onLocationfound={this.handleLocationFound}
                 ref={this.mapRef}
@@ -82,9 +82,9 @@ class MapContainer extends Component {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 <Marker
-                    draggable={true}
+                    draggable={this.props.draggable}
                     onDragend={this.updatePosition}
-                    position={markerPosition}
+                    position={this.props.center?this.props.center:markerPosition}
                     ref={this.markerRef}>
                 </Marker>
             </Map>

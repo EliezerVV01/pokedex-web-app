@@ -27,7 +27,7 @@ class validateEmail extends Component {
             token: token,
         };
         if(token){
-            axios.post('/users/verifyEmail', tokenData)
+            axios.put('/users/verifyEmail', tokenData)
             .then(res => {
                 this.props.setValidity(true);
             }).catch(err => {

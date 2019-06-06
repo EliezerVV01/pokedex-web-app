@@ -1,0 +1,37 @@
+.PokemonDetails{
+    width: 100%;
+    margin: auto;
+    max-width: 500px;
+    
+}
+
+.Details{
+    width: 100%;
+    max-width: 450px;
+}
+
+
+.InfoContainer{
+    border-radius: 10px;
+    width: 100%;
+    max-width: 1080px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    background: white;
+    padding: 40px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.PicContainer{
+    padding: 10px;
+    display: inline-block;
+    background-color: rgba(228, 190, 253, 0.664);
+    border-radius: 5px;
+}
+
+.PicContainer:hover{
+    background-color: rgb(228, 190, 253);
+}
+

@@ -179,7 +179,7 @@ class SignUp extends Component {
             formData.user[formElementIdentifier] = this.state.userForm[formElementIdentifier].value;
         }   
         
-        axios.post('/users/create/', formData)
+        axios.post('/users/', formData)
          .then( response => {
           this.setState({isLoading: false});
             this.props.setValidity(false);
