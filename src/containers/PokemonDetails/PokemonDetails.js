@@ -7,8 +7,7 @@ import Auxi from './../../hoc/Auxi';
 import MapContainer from '../Map/MapContainer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Button from '../../components/Button/Button';
-import { updateObject, checkValidity } from '../../utility/utility';
-import { faSlidersH } from '@fortawesome/free-solid-svg-icons';
+import { updateObject, checkValidity, capitalizeFirstLetter } from '../../utility/utility';
 import Axios from 'axios';
 import * as links from './../../Routes/RoutesList';
 import Modal from '../../components/UI/Modal/Modal';
@@ -70,6 +69,7 @@ class PokemonDetails extends Component {
 
 
   fetchPokemonInfo(){
+    //This methods get the data about a pokemon related to a specific user
     Axios.get(`http://localhost:8080/api/pokemons/${this.id}`, { headers: { 'Authorization': this.props.token } })
     .then(response => {
       
@@ -108,18 +108,18 @@ class PokemonDetails extends Component {
         this.setState({ notFound: true })
       }
     }).catch(err => {
-      if (err.response.status === 401) {
-        this.props.history.push({ pathname: links.LOGOUT });
-      }
-      this.setState({ error: true, isUploading: false });
-      if (err.response.data.errorMessage) {
-        this.setState({ errorMessage: err.response.data.errorMessage })
-      } else if (err.request) {
-        this.setState({ errorMessage: "¡Something went wrong! Try later" })
+      this.setState({ error: true, loading: false, errorMessage: "Something went wrong!" });
+      if (err.response) {
+          if (err.response.status === 401) {
+              this.props.history.push({ pathname: links.LOGOUT });
+          }
+          else if (err.response.data.errorMessage) {
+              this.setState({ errorMessage: err.response.data.errorMessage })
+          }  
       } else {
-        this.setState({ errorMessage: "¡There's something bad in the request!" })
+          this.setState({ errorMessage: "Something went wrong!" });
       }
-    })
+  })
   }
 
 
@@ -150,18 +150,18 @@ class PokemonDetails extends Component {
       this.setState({edited: true});
     })
     .catch(err => {
-      if (err.response.status === 401) {
-        this.props.history.push({ pathname: links.LOGOUT });
-      }
-      this.setState({ error: true });
-      if (err.response.data.errorMessage) {
-        this.setState({ errorMessage: err.response.data.errorMessage })
-      } else if (err.request) {
-        this.setState({ errorMessage: "¡Something went wrong! Try later" })
+      this.setState({ error: true, loading: false, errorMessage: "Something went wrong!" });
+      if (err.response) {
+          if (err.response.status === 401) {
+              this.props.history.push({ pathname: links.LOGOUT });
+          }
+          else if (err.response.data.errorMessage) {
+              this.setState({ errorMessage: err.response.data.errorMessage })
+          }  
       } else {
-        this.setState({ errorMessage: "¡There's something bad in the request!" })
+          this.setState({ errorMessage: "Something went wrong!" });
       }
-    })
+  })
   }
 
   selectChangedHandler = (e) => {
@@ -324,7 +324,7 @@ class PokemonDetails extends Component {
           {this.state.isDeleting?modalDelete:null}
         {this.state.error ? modalError : null}
           <div className="InfoContainer">
-            <h3>{this.state.pokemon['pokemon'].name.toUpperCase()}</h3>
+            <h5>{capitalizeFirstLetter(this.state.pokemon['pokemon'].name)}</h5>
             <div className="PicContainer">
               <img alt="pokemon_pic" src={this.state.pokemon['pokemon'].picture}></img>
             </div>
@@ -338,7 +338,6 @@ class PokemonDetails extends Component {
             <h5>Details</h5>
             <div className="Details"> {details}</div>
           </div>
-          <br></br>
         </div>
       </Layout>)
     } else {

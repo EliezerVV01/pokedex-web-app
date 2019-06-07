@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import Button from './../../components/Button/Button';
+import Button from './../../Button/Button';
 
-import Form from './../../components/Form/Form'
+import Form from './../../Form/Form'
 import './NotFoundPage.css';
-import PokemonSad from '../../Assets/Images/pokemon_sad.png';
+import PokemonSad from '../../../Assets/Images/pokemon_sad.png';
 
-import * as links from './../../Routes/RoutesList';
+import * as links from './../../../Routes/RoutesList';
 
 class NotFoundPage extends Component {
     render() {

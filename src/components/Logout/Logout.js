@@ -6,6 +6,7 @@ import * as links from './../../Routes/RoutesList';
 
 
 const logout = ( props ) => {
+  props.setUserEmail('');
   props.setAuth(false);
   props.setToken('');
   return(<div>
@@ -17,6 +18,7 @@ const mapDispatchToProps = dispatch => {
     return {
         setAuth: (val) => dispatch(actions.setAuth(val)),
         setToken: (token) => dispatch(actions.setToken(token)),
+        setUserEmail: (email) => dispatch(actions.setUserEmail(email))
     };
 };
 

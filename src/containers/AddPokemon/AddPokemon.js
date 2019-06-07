@@ -64,7 +64,7 @@ const initialState = {
 
 class AddPokemon extends Component {
 
-    
+    //This variable is used to know if this component is Mounted or not
     _isMounted = false;
 
     state = initialState;
@@ -72,13 +72,13 @@ class AddPokemon extends Component {
     reset() {
         this.setState(initialState);
     }
-    
 
-    componentDidMount(){
+
+    componentDidMount() {
         this._isMounted = true;
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this._isMounted = false;
     }
 
@@ -119,19 +119,17 @@ class AddPokemon extends Component {
                 this.setState({ isUploadig: false });
                 this.setState({ success: true });
             }).catch(err => {
-                if(err.response.status===401){
-                    this.props.history.push({pathname: links.LOGOUT});
-                }
-                if(this._isMounted){
-                    this.setState({ error: true, isUploading: false });
-                if ( err.response.data.errorMessage) {
-                    this.setState({ errorMessage: err.response.data.errorMessage })
-                } else if (err.request) {
-                    this.setState({ errorMessage: "¡Something went wrong! Try later" })
+                this.setState({ error: true, loading: false, errorMessage: "Something went wrong!" });
+                if (err.response) {
+                    if (err.response.status === 401) {
+                        this.props.history.push({ pathname: links.LOGOUT });
+                    }
+                    else if (err.response.data.errorMessage) {
+                        this.setState({ errorMessage: err.response.data.errorMessage })
+                    }
                 } else {
-                    this.setState({ errorMessage: "¡There's something bad in the request!" })
+                    this.setState({ errorMessage: "Something went wrong!" });
                 }
-            }
             })
         this.reset();
     }
@@ -139,6 +137,8 @@ class AddPokemon extends Component {
     //Functions for getting the data from the form
 
     setPosition = (lon, lat) => {
+
+        //This method takes coordinates and set the states of the pokemon longitud and latitude 
 
         const updatedLongitude = updateObject(this.state.pokemon['locationLongitude'],
             {
@@ -160,6 +160,7 @@ class AddPokemon extends Component {
 
 
     selectChangedHandler = (event) => {
+        //This component hanlde the select of captured
         const updatedFormElement = updateObject(this.state.pokemon['captured'], {
             value: event.target.value,
             valid: checkValidity(event.target.value, this.state.pokemon['captured'].validation),
@@ -179,6 +180,7 @@ class AddPokemon extends Component {
 
 
     selectedPokemonHandler = (pokemon) => {
+        //This method set in the sates the pokemon that has been selected
         const updatedSelected = updateObject(this.state.pokemonSelected, {
             image: pokemon.picture,
             name: pokemon.name,
@@ -204,6 +206,7 @@ class AddPokemon extends Component {
 
 
     pokemonSelectionStart = (event) => {
+        //This method set selectingPokemon to true so that a modal be displayed and get all pokemons from their names
         event.preventDefault();
         this.setState({ selectingPokemon: true, loading: true });
         Axios.get(`http://localhost:8080/api/pokemons/?name=${this.state.pokemonInSearch}`)
@@ -221,6 +224,7 @@ class AddPokemon extends Component {
     searchDebounced = debounce((e) => this.pokemonSelectionStart(e), 250);
 
     onSearch(event) {
+        //This method set the pokemonInSearch state which to be change triggers the fetch of pokemons by their name
         event.persist();
         this.searchDebounced(event);
         this.setState({ pokemonInSearch: event.target.value });
@@ -237,14 +241,15 @@ class AddPokemon extends Component {
                 pokemon => {
 
                     return (
-                       <PokemonCard 
-                       onClick={() => this.selectedPokemonHandler(pokemon)}
-                       onDoubleClick={() => { this.selectedPokemonHandler(pokemon); this.setState({ selectingPokemon: false }) }}
-                       src={pokemon.picture}
-                       keyCard={pokemon.id + 1}
-                       keyImg={pokemon.name + 1}
-                       keyName={pokemon.name}
-                       name={pokemon.name}> </PokemonCard>
+                        <PokemonCard
+                            key={pokemon.id+2}
+                            onClick={() => this.selectedPokemonHandler(pokemon)}
+                            onDoubleClick={() => { this.selectedPokemonHandler(pokemon); this.setState({ selectingPokemon: false }) }}
+                            src={pokemon.picture}
+                            keyCard={pokemon.id + 1}
+                            keyImg={pokemon.name + 1}
+                            keyName={pokemon.name}
+                            name={pokemon.name}> </PokemonCard>
                     )
 
                 });
@@ -345,8 +350,8 @@ class AddPokemon extends Component {
                     <strong>Pick where you found it (Drag the pointer)</strong>
                     <br></br>
 
-                        <MapContainer draggable={true} setPosition={(lon, lat) => this.setPosition(lon, lat)}></MapContainer>
-                    
+                    <MapContainer draggable={true} setPosition={(lon, lat) => this.setPosition(lon, lat)}></MapContainer>
+
                     <br></br>
                     <Button className="btn btn-info FormButtons"
                         disabled={!this.state.formIsValid}

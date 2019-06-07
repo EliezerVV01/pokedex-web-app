@@ -28,15 +28,16 @@ class Pokedex extends Component {
         .then(response => {
             this.setState({ loading: false, pokemons: response.data.pokemons });
         }).catch(err => {
-            this.setState({ error: true, loading: false });
+            this.setState({ error: true, loading: false, errorMessage: "Something went wrong!" });
             if (err.response) {
-                err.response.data.errorMessage? 
-                this.setState({ errorMessage: err.response.data.errorMessage }):
-                this.setState({ errorMessage: "There's something wrong in your request" })
-            } else if (err.request) {
-                this.setState({ errorMessage: "¡Something went wrong! Try later" })
+                if (err.response.status === 401) {
+                    this.props.history.push({ pathname: links.LOGOUT });
+                }
+                else if (err.response.data.errorMessage) {
+                    this.setState({ errorMessage: err.response.data.errorMessage })
+                }  
             } else {
-                this.setState({ errorMessage: "¡There's something bad in the request!" })
+                this.setState({ errorMessage: "Something went wrong!" });
             }
         })
     }

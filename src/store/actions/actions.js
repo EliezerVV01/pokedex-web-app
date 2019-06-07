@@ -4,6 +4,15 @@ export const SET_AUTH = 'SET_AUTH';
 
 export const SET_TOKEN = 'SET_TOKEN';
 
+export const SET_USER_EMAIL = 'SET_USER_EMAIL'
+
+export const setUserEmail = (_val) => {
+    return {
+        type: SET_USER_EMAIL,
+        val: _val,
+    }
+}
+
 export const setValidity = (_val) =>{
        return {
            type: SET_VALIDATY,

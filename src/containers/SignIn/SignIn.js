@@ -83,6 +83,7 @@ class SignIn extends Component {
     }
 
     logUserHandler = (event) => {
+        //This methods consume the login resource of the api 
         event.preventDefault();
         this.setState({ isLoading: true });
         const formData = {
@@ -92,13 +93,14 @@ class SignIn extends Component {
             formData.user[formElementIdentifier] = this.state.userForm[formElementIdentifier].value;
         }
         axios.post('/users/login/', formData)
-            .then(response => {
+            .then(response => {    
+               
                 this.props.setToken(response.data.token);
+                this.props.setUserEmail(response.data.email);
                 this.props.setAuth(true);
                if(this._isMounted){
                     this.setState({ isLoading: false });
                 }
-                this.props.history.push({ pathname: links.HOME });
             })
             .catch(err => {
                 this.setState({ error: true, isLoading: false });
@@ -174,7 +176,7 @@ class SignIn extends Component {
                                 clicked={(e) => this.cancelHandler(e)}> Need an account?</Button>
                                <Button disabled={this.state.isLoading}
                                 className="btn btn-link resetPass"
-                                clicked={(e) => this.props.history.push({pathname: links.RESETPASSWORD})}> Forgot your password?</Button> 
+                                clicked={(e) => { e.preventDefault(); this.props.history.push({pathname: links.RESETPASSWORD})}}> Forgot your password?</Button> 
                         </div>
                     </Form>
                 </div>
@@ -194,6 +196,7 @@ const mapDispatchToProps = dispatch => {
     return {
         setToken: (token) => dispatch(actions.setToken(token)),
         setAuth: (val) => dispatch(actions.setAuth(val)),
+        setUserEmail: (email) => dispatch(actions.setUserEmail(email))
     };
 };
 
