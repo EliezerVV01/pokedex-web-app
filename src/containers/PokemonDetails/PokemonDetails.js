@@ -47,11 +47,11 @@ class PokemonDetails extends Component {
         },
       },
       locationLongitude: {
-        value: 0.5,
+        value: null,
         valid: true,
       },
       locationLatitude: {
-        value: 0.5,
+        value: null,
         valid: true,
       }
     },

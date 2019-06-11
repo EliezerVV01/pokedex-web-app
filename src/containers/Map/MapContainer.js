@@ -37,7 +37,9 @@ class MapContainer extends Component {
             hasLocation: true,
             latlng: e.latlng,
             marker: e.latlng
-        })
+        });
+        this.props.setPosition(this.state.latlng['lng'], 
+        this.state.latlng['lat'] );
     }
 
     updatePosition = () => {

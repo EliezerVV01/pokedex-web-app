@@ -50,11 +50,11 @@ const initialState = {
             }
         },
         locationLongitude: {
-            value: 0.5,
+            value: null,
             valid: true,
         },
         locationLatitude: {
-            value: 0.5,
+            value: null,
             valid: true,
         }
 
@@ -114,7 +114,7 @@ class AddPokemon extends Component {
 
 
 
-        Axios.post('/pokemons/', formData, { headers: { 'Authorization': this.props.token } })
+    Axios.post('/pokemons/', formData, { headers: { 'Authorization': this.props.token } })
             .then(response => {
                 this.setState({ isUploadig: false });
                 this.setState({ success: true });
@@ -282,6 +282,7 @@ class AddPokemon extends Component {
                     Done
                 </Button>
                 <Input elementType="input"
+                 elementConfig={{placeholder: "Search a pokemon"}}
                     value={this.state.pokemonInSearch}
                     changed={(e) => this.onSearch(e)}></Input>
                 <div className="PokemonSelected">

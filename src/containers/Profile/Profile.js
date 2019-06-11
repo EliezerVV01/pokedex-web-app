@@ -12,9 +12,12 @@ import { connect } from 'react-redux';
 import * as links from './../../Routes/RoutesList'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Modal from '../../components/UI/Modal/Modal';
+import ImageUpload from '../ImageUpload/ImageUpload';
+import PokemonSad from '../../Assets/Images/pokemon_sad.png';
 
 class Profile extends Component {
     state = {
+        isDeleting: false,
         error: false,
         errorMessage: null,
         userPic: null,
@@ -22,9 +25,48 @@ class Profile extends Component {
         formValid: true,
         isEditing: false,
         isLoading: false,
-
+        isUpdatingPhoto: false,
     }
 
+    //Setting error
+
+    setError(msg){
+        this.setState({error: true, errorMessage: msg});
+    }
+
+    //For uploading picture 
+    uploadPicture(file) {
+        this.setState({isLoading: true})
+        if (!file) {
+            this.setState({ isUpdatingPhoto: false });
+        } else {
+            const formData = new FormData();
+            formData.append('profileImage', file);
+            const config = {
+                headers: {
+                    'content-type': 'multipart/form-data',
+                    'Authorization': this.props.token,
+                }
+            };
+            Axios.put("users/profilephoto", formData, config)
+                .then((response) => {
+                 this.setState({ user : response.data, userPic: response.data.picture, 
+                                 isUpdatingPhoto: false, isLoading:false});
+                }).catch(err => {
+                    this.setState({ error: true, isLoading: false, errorMessage: "Something went wrong!" });
+                    if (err.response) {
+                        if (err.response.status === 401) {
+                            this.props.history.push({ pathname: links.LOGOUT });
+                        }
+                        else if (err.response.data.errorMessage) {
+                            this.setState({ errorMessage: err.response.data.errorMessage })
+                        }
+                    } else {
+                        this.setState({ errorMessage: "Something went wrong!" });
+                    }
+                });
+        }
+    }
 
 
     saveChanges = () => {
@@ -35,37 +77,43 @@ class Profile extends Component {
         };
         this.setState({ isEditing: false, isLoading: true });
         Axios.put('/users/updateUser', data, { headers: { 'Authorization': this.props.token } })
-         .then(response => this.setState({user: response.data, isLoading: false}))
-         .catch(err => {
-            this.setState({ error: true, isLoading: false, errorMessage: "Something went wrong!" });
-            if (err.response) {
-                if (err.response.status === 401) {
-                    this.props.history.push({ pathname: links.LOGOUT });
-                }
-                else if (err.response.data.errorMessage) {
-                    this.setState({ errorMessage: err.response.data.errorMessage })
-                }  
-            } else {
-                this.setState({ errorMessage: "Something went wrong!" });
-            }
-            this.fetchUser();
-        })
-    }
-
-    fetchUser = () => {
-        //We are requesting the user from a token and setting the state with it
-        this.setState({ isLoading: true });
-        Axios.get('/users/getUser/', { headers: { 'Authorization': this.props.token } })
             .then(response => this.setState({ user: response.data, isLoading: false }))
             .catch(err => {
-                this.setState({ error: true, loading: false, errorMessage: "Something went wrong!" });
+                this.setState({ error: true, isLoading: false, errorMessage: "Something went wrong!" });
                 if (err.response) {
                     if (err.response.status === 401) {
                         this.props.history.push({ pathname: links.LOGOUT });
                     }
                     else if (err.response.data.errorMessage) {
                         this.setState({ errorMessage: err.response.data.errorMessage })
-                    }  
+                    }
+                } else {
+                    this.setState({ errorMessage: "Something went wrong!" });
+                }
+                this.fetchUser();
+            })
+    }
+
+    fetchUser = () => {
+        //We are requesting the user from a token and setting the state with it
+        this.setState({ isLoading: true });
+        Axios.get('/users/getUser/', { headers: { 'Authorization': this.props.token } })
+            .then((response) => {
+                this.setState({
+                    user: response.data,
+                    isLoading: false, userPic: response.data.picture
+                });
+
+            })
+            .catch(err => {
+                this.setState({ error: true, loading: false, errorMessage: "There's something wrong!" });
+                if (err.response) {
+                    if (err.response.status === 401) {
+                        this.props.history.push({ pathname: links.LOGOUT });
+                    }
+                    else if (err.response.data.errorMessage) {
+                        this.setState({ errorMessage: err.response.data.errorMessage })
+                    }
                 } else {
                     this.setState({ errorMessage: "Something went wrong!" });
                 }
@@ -82,6 +130,7 @@ class Profile extends Component {
         this.setState(() => {
             return {
                 isEditing: false,
+                isUpdatingPhoto: false,
             }
         });
         this.fetchUser();
@@ -104,6 +153,10 @@ class Profile extends Component {
         this.setState({ error: null, errorMessage: null });
     }
 
+    cancelUploadingPic = () => {
+        this.setState({ isUpdatingPhoto: false });
+    }
+
     edit() {
         //This method set editing to true and set userbackup state with the user state fetched from the api 
         this.setState(() => {
@@ -114,6 +167,16 @@ class Profile extends Component {
     }
 
     render() {
+        let modalDelete = (
+            <Modal top="35%" show={this.state.isDeleting} id="DeleteModal"  className="CenterModal">
+                <img alt="pokemon_sad"
+                              src={PokemonSad}
+                              className="pokemon_sad" />
+                <h5>Are you really sure you want to delete your account?</h5>
+                <Button className="btn btn-danger FormButtons" clicked={() => this.setState({isDeleting: false})}>NO!</Button>
+            </Modal>
+        );
+
         let modalError = (
             <Modal top="35%" show={this.state.error} id="ErrorModal" modalClosed={this.closeModal}>
                 <h5 style={{ textAlign: 'center' }}>{this.state.errorMessage}</h5>
@@ -152,7 +215,12 @@ class Profile extends Component {
                 <p> <strong>Gender:</strong> {this.state.user['gender'] ? 'Male' : 'Female'}</p>
                 <p> <strong>Address:</strong> {this.state.user['address']}</p>
                 <p> <strong>Birthdate:</strong> {formatDate(this.state.user['birthDate'])}</p>
-                <Button className="btn btn-info FormButtons" clicked={() => this.edit()}>Edit</Button>
+                <Button className="btn btn-info CoolButtons" 
+                clicked={() => this.edit()}><FontAwesomeIcon icon="pencil-alt">
+                    </FontAwesomeIcon> </Button>
+                <Button className="btn btn-danger CoolButtons"
+                 clicked={() => this.setState({isDeleting: true})}><FontAwesomeIcon icon="trash-alt">
+                    </FontAwesomeIcon> </Button>
             </Auxi>)
         }
 
@@ -161,13 +229,27 @@ class Profile extends Component {
         return (
             <Layout>
                 <div className="InfoContainer UserContainer">
+                {this.state.isDeleting?modalDelete:null}
                     {this.state.error ? modalError : null}
                     <h3>User information</h3>
                     <br></br>
-                    <img
-                        alt="user"
-                        src={UserImg}
-                    ></img>
+                    {this.state.isUpdatingPhoto ?
+                        <ImageUpload style={{ width: '100%', height: '145px', borderRadius: '50%' }}
+                            src={this.state.userPic ? `http://${this.state.userPic}` : UserImg}
+                            cancel={this.cancelUploadingPic}
+                            setError={(msg)=>this.setError(msg)}
+                            uploadPicture={(file) => this.uploadPicture(file)}></ImageUpload> :
+                        <Auxi>
+                            <img style={{ width: '100%', height: '145px', borderRadius: '50%' }}
+                                alt="user"
+                                src={this.state.userPic ? `http://${this.state.userPic}` : UserImg}
+                            ></img>
+                            <br></br>
+                            <Button clicked={() => this.setState({ isUpdatingPhoto: true })}
+                                className="btn btn-light"
+                                style={{ margin: '20px', borderRadius: '50%' }}>
+                                <FontAwesomeIcon icon="images"></FontAwesomeIcon> </Button>
+                        </Auxi>}
                     {this.state.isLoading ? <Spinner></Spinner> : profile}
                 </div>
             </Layout>

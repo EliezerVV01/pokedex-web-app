@@ -1,0 +1,27 @@
+.upload {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+}
+
+.picButtons {
+    transition-delay: 10s;
+}
+
+.upload + label {
+    width: 40px;
+    height:40px;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 0 5px;
+}
+
+.upload:focus + label,
+.upload + label:hover {
+    cursor:pointer;
+}
+
+.upload:focus + label {
+	outline: 1px dotted #000;
+	outline: -webkit-focus-ring-color auto 5px;
+}

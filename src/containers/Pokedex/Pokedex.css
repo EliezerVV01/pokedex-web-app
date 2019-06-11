@@ -3,6 +3,10 @@
  height: 100%;
 }
 
+.PaginationContainer{
+    text-align: center;
+}
+
 .Pokemons-Container{
     border-radius: 10px;
     width: 100%;
@@ -11,7 +15,7 @@
     margin-right: auto;
     margin-top: 20px;
     background: white;
-    padding: 40px;
+    padding: 15px 40px;
     min-height: 465px;
 }
 

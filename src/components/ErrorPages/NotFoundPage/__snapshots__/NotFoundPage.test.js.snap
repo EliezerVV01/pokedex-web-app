@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="NotFoundPage"
+>
+  <form
+    style={
+      Object {
+        "marginTop": "100px",
+      }
+    }
+  >
+    <img
+      alt="pokemon_sad"
+      className="pokemon_sad"
+      src="pokemon_sad.png"
+    />
+    <h3>
+      Error 404: Not Found Page
+    </h3>
+    <button
+      className="btn btn-primary Button"
+      onClick={[Function]}
+    >
+      Go to Home Page!
+    </button>
+  </form>
+</div>
+`;

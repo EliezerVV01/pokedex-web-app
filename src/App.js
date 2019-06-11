@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faUser, faSignOutAlt, faPlusCircle, faMapMarker, 
-  faWindowClose, faCheckCircle, faExclamationCircle, faHandPointer, faPaw } from '@fortawesome/free-solid-svg-icons'
+  faWindowClose, faCheckCircle, faExclamationCircle,
+   faHandPointer, faPaw, faPencilAlt, faCameraRetro,
+  faTimes, faSave, faImages, faSearch, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import Pokedex from './containers/Pokedex/Pokedex'
 import AddPokemon from './containers/AddPokemon/AddPokemon'
 import SignIn from './containers/SignIn/SignIn'
@@ -17,9 +19,7 @@ import AuthenticatedRoute from './Routes/AuthenticatedRoute/AuthenticatedRoute';
 import UnauthenticatedRoute from './Routes/UnanthenticatedRoute/UnauthenticatedRoute';
 import Axios from 'axios';
 
-
-
-Axios.defaults.baseURL = 'http://localhost:8080/api/';
+Axios.defaults.baseURL =  process.env.REACT_APP_API_URL;
 
 
 Axios.interceptors.request.use(request => {
@@ -36,19 +36,17 @@ Axios.defaults.headers.common['Authorization'] = 'sadasd';
 
 library.add(faUser, faSignOutAlt, faPlusCircle, 
   faMapMarker, faWindowClose, faCheckCircle, 
-  faExclamationCircle, faHandPointer, faPaw)
+  faExclamationCircle, faHandPointer, faPaw, faPencilAlt,
+  faCameraRetro, faTimes, faSave, faImages, faSearch,
+  faTrashAlt)
 
 class App extends Component {
 
   render() {
     return (
-      <div>
-
-     
           <Switch> 
-            <AuthenticatedRoute path="/" exact component={Pokedex} />
-            <UnauthenticatedRoute path="/resetPassword" exact component={ResetPassword} /> ResetPassword
-            <UnauthenticatedRoute path="/resetPassword/:token" exact component={ResetPassword} /> ResetPassword
+            <UnauthenticatedRoute path="/resetPassword" exact component={ResetPassword} /> 
+            <UnauthenticatedRoute path="/resetPassword/:token" exact component={ResetPassword} /> 
             <UnauthenticatedRoute path="/signin" exact component={SignIn} />
             <UnauthenticatedRoute path="/validate" exact component={ValidateEmail} />
             <UnauthenticatedRoute path="/validate/:token" exact component={ValidateEmail} />
@@ -57,14 +55,11 @@ class App extends Component {
             <AuthenticatedRoute path="/pokemondetails/:pokemonId" exact component={PokemonDetails} />
             <AuthenticatedRoute path="/profile" exact component={Profile} />
             <AuthenticatedRoute path="/addpokemon" exact component={AddPokemon} />
+            <AuthenticatedRoute path="/" exact component={Pokedex} />
             <Route component={NotFoundPage} />
           </Switch>
-     
-
-      </div>
     );
   }
 }
-
 
 export default App;

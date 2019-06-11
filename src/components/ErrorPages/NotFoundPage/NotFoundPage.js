@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
 import Button from './../../Button/Button';
-
 import Form from './../../Form/Form'
 import './NotFoundPage.css';
 import PokemonSad from '../../../Assets/Images/pokemon_sad.png';
-
 import * as links from './../../../Routes/RoutesList';
 
 class NotFoundPage extends Component {
@@ -17,7 +14,7 @@ class NotFoundPage extends Component {
                         src={PokemonSad}
                         className="pokemon_sad" />
                     <h3>Error 404: Not Found Page</h3>
-                    <NavLink to={links.HOME} exact><Button className="btn btn-primary">Go to Home Page!</Button> </NavLink>
+                   <Button className="btn btn-primary" clicked={()=>this.props.history.push({pathname: links.HOME})}>Go to Home Page!</Button>
                 </Form>
             </div>
         )

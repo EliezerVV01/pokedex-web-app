@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<form
+  className="input"
+  style={
+    Object {
+      "marginTop": "85%",
+    }
+  }
+/>
+`;
