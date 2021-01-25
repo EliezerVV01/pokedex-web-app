@@ -48,16 +48,20 @@ class ImageUpload extends Component {
             <div>
                 {$imagePreview}
                 <div style={{ margin: '20px' }}>
+                    {this.state.file?
                     <Button style={{ borderRadius: '50%' }} className="btn btn-success picButtons" clicked={() => this.props.uploadPicture(this.state.file)}>
-                        <FontAwesomeIcon icon="save"></FontAwesomeIcon>
-                    </Button>
+                       <FontAwesomeIcon icon="save"></FontAwesomeIcon>
+                     </Button>
+                     :
+                     ''
+                     }
                     <input type="file" name="file" id="file"
                         onChange={this._handleImageChange}
                         className="upload" />
                     <label className="btn btn-dark picButtons" htmlFor="file">
                         <FontAwesomeIcon icon="camera-retro"></FontAwesomeIcon>
                     </label>
-                    <Button style={{ borderRadius: '50%' }} className="btn btn-danger picButtons" clicked={this.props.cancel}>
+                    <Button style={{ borderRadius: '50%' }} className="btn btn-danger picButtons" clicked={() => this.props.cancel()}>
                         <FontAwesomeIcon icon="times"></FontAwesomeIcon>
                     </Button>
                 </div>

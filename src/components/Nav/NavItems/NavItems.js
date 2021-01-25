@@ -6,12 +6,10 @@ import NavigationItem from './NavItem/NavItem';
 import { connect } from 'react-redux';
 
 const navigationItems = (props) => { 
-    const email = props.email;
-    const emailShort = email.substr(0, email.indexOf('@')); 
     return (
     <ul className='NavigationItems'>
         <NavigationItem link={links.PROFILE} exact> <FontAwesomeIcon 
-                                                icon="user" /> {emailShort}  
+                                                icon="user" /> Profile  
         </NavigationItem>
         <NavigationItem link={links.LOGOUT}> <FontAwesomeIcon 
                                                 icon="sign-out-alt" />

@@ -11,7 +11,6 @@ import Modal from '../../components/UI/Modal/Modal';
 import PokemonCard from './../../components/PokemonCard/PokemonCard';
 import * as links from '../../Routes/RoutesList';
 import Button from '../../components/Button/Button';
-import MapContainer from '../Map/MapContainer';
 import './AddPokemon.css';
 import Axios from 'axios';
 import Spinner from './../../components/UI/Spinner/Spinner';
@@ -140,19 +139,8 @@ class AddPokemon extends Component {
 
         //This method takes coordinates and set the states of the pokemon longitud and latitude 
 
-        const updatedLongitude = updateObject(this.state.pokemon['locationLongitude'],
-            {
-                value: lon,
-            })
-        const updatedLatitude = updateObject(this.state.pokemon['locationLatitude'],
-            {
-                value: lat,
-            })
-
         const updatedPokemon = updateObject(this.state.pokemon,
             {
-                locationLongitude: updatedLongitude,
-                locationLatitude: updatedLatitude,
             });
 
         this.setState({ pokemon: updatedPokemon });
@@ -267,7 +255,7 @@ class AddPokemon extends Component {
         let modalSuccess = (
             <Modal top="35%" show={this.state.success} id="SuccessModal" modalClosed={this.closeModal}>
                 <h5>You have added a great pokemon to your pokedex!</h5>
-                <Button className="btn btn-success" clicked={() => this.closeModal()}>
+                <Button className="btn btn-success" clicked={() => {this.closeModal(); this.props.history.push({ pathname: links.HOME });}}>
                     <FontAwesomeIcon
                         icon="check-circle" /> Great!</Button>
             </Modal>
@@ -294,7 +282,7 @@ class AddPokemon extends Component {
                 </div>
 
                 <p style={{ color: 'rgb(103, 103, 103)', marginBottom: 0, fontWeight: 600, fontSize: 18, textAlign: "center" }}>{this.state.pokemonSelected['name'] ?
-                    `You have selected: ${this.state.pokemonSelected['name']}` :
+                    `` :
                     `You haven't selected a pokemon yet`}</p>
                 <br></br>
                 <div className="PokemonsContainer">
@@ -348,10 +336,7 @@ class AddPokemon extends Component {
                             ' Select the pokemon you found' :
                             ` Well done! You have selected ${this.state.pokemonSelected['name']}`}
                     </Button>
-                    <strong>Pick where you found it (Drag the pointer)</strong>
                     <br></br>
-
-                    <MapContainer draggable={true} setPosition={(lon, lat) => this.setPosition(lon, lat)}></MapContainer>
 
                     <br></br>
                     <Button className="btn btn-info FormButtons"

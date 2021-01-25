@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Profile.css';
-import { formatDate, updateObject, getDate } from './../../utility/utility';
+import { formatDate, updateObject } from './../../utility/utility';
 import UserImg from './../../Assets/Images/user.png';
 import Layout from './../../hoc/Layout/Layout'
 import Auxi from '../../hoc/Auxi';
@@ -191,18 +191,9 @@ class Profile extends Component {
 
         if (this.state.isEditing) {
             profile = (<Auxi>
-                <div> <strong>Username:</strong> <Input elementType="input" value={this.state.user['userName']} changed={(e) => this.onChangeHandler(e, 'userName')}></Input></div>
                 <div> <strong>First Name:</strong> <Input elementType="input" value={this.state.user['firstName']} changed={(e) => this.onChangeHandler(e, 'firstName')}></Input></div>
                 <div> <strong>Last Name:</strong> <Input elementType="input" value={this.state.user['lastName']} changed={(e) => this.onChangeHandler(e, 'lastName')}></Input></div>
                 <div> <strong>Address:</strong> <Input elementType="input" value={this.state.user['address']} changed={(e) => this.onChangeHandler(e, 'address')}></Input></div>
-                <div> <strong>Birthdate:</strong><input onChange={(e) => this.onChangeHandler(e, 'birthDate')}
-                    style={{
-                        maxWidth: '500px ', marginLeft: 'auto',
-                        marginRight: 'auto', marginTop: '15px'
-                    }}
-                    value={getDate(this.state.user['birthDate'])}
-                    className="InputElement"
-                    type="date"></input></div>
                 <Button style={{ marginTop: '15px' }} disabled={!this.state.formValid} clicked={() => this.saveChanges()} className="btn btn-info FormButtons">Save changes</Button>
                 <Button style={{ marginTop: '15px' }} className="btn btn-danger FormButtons" clicked={() => this.cancel()}>Cancel</Button>
             </Auxi>)
@@ -218,9 +209,6 @@ class Profile extends Component {
                 <Button className="btn btn-info CoolButtons" 
                 clicked={() => this.edit()}><FontAwesomeIcon icon="pencil-alt">
                     </FontAwesomeIcon> </Button>
-                <Button className="btn btn-danger CoolButtons"
-                 clicked={() => this.setState({isDeleting: true})}><FontAwesomeIcon icon="trash-alt">
-                    </FontAwesomeIcon> </Button>
             </Auxi>)
         }
 
@@ -231,7 +219,7 @@ class Profile extends Component {
                 <div className="InfoContainer UserContainer">
                 {this.state.isDeleting?modalDelete:null}
                     {this.state.error ? modalError : null}
-                    <h3>User information</h3>
+                    <h3>{this.state.user['firstName']} {this.state.user['lastName']}</h3>
                     <br></br>
                     {this.state.isUpdatingPhoto ?
                         <ImageUpload style={{ width: '100%', height: '145px', borderRadius: '50%' }}

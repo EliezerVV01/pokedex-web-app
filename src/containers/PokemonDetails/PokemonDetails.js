@@ -4,7 +4,6 @@ import Layout from '../../hoc/Layout/Layout';
 import { connect } from 'react-redux';
 import Input from '../../components/Input/Input';
 import Auxi from './../../hoc/Auxi';
-import MapContainer from '../Map/MapContainer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Button from '../../components/Button/Button';
 import { updateObject, checkValidity, capitalizeFirstLetter } from '../../utility/utility';
@@ -294,7 +293,6 @@ class PokemonDetails extends Component {
             changed={(event) => this.selectChangedHandler(event)}></Input>
           <br></br>
           <p><strong>Where did u find it?</strong></p>
-          <MapContainer draggable={true} center={this.state.latlng} setPosition={(lon, lat) => this.setPosition(lon, lat)}></MapContainer>
           <br></br>
           <Button className="btn btn-info FormButtons"
             clicked={() => this.saveChange()} disabled={!this.state.formIsValid}>Save changes </Button>
@@ -306,8 +304,6 @@ class PokemonDetails extends Component {
           <br></br>
           <p><strong>Date: </strong>  {this.state.pokemon['details'].date}</p>
           <p><strong>captured: </strong>  {this.state.pokemon['details'].captured ? 'Yes' : 'No'}</p>
-          <p><strong>Here is where you found it</strong></p>
-          <MapContainer center={this.state.latlng} draggable={false} setPosition={(lon, lat) => this.setPosition(lon, lat)}></MapContainer>
           <br></br>
           <Button className="btn btn-info FormButtons" clicked={() => this.setState({ isEditing: true })}>Edit</Button>
           <Button className="btn btn-danger FormButtons" clicked={() => this.setState({isDeleting: true})}>Delete</Button>
